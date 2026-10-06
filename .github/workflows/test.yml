@@ -15,4 +15,4 @@ jobs:
       - uses: astral-sh/setup-uv@v6
         with:
           version: "0.6.6"
-      - run: uv run --no-project --python 3.12 --with certifi --with pytest python -m pytest -q
+      - run: uv run --no-project --python 3.12 --with certifi --with pytest --with openapi-schema-validator python -m pytest -q

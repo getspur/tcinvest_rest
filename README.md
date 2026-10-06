@@ -77,7 +77,23 @@ curl --fail 'http://127.0.0.1:8788/tools/getTickerOverview?ticker=TCB'
 `/health` checks the local process only. `/tools` checks upstream access.
 Tool responses contain `result` and normalized `rows` for SQL consumption.
 
-## 3. Install the table functions into SpurLab
+## 3. Add the tables to SpurLab
+
+In SpurLab's REST/OpenAPI connection importer, use the running server's
+`http://127.0.0.1:8788/openapi.json` or the included `tcinvest.openapi.yaml`.
+The specification describes each tool's normalized `rows[]` fields, including
+numeric columns, nullable values, nested objects, and arrays. `payload` remains
+available as JSON text for accessing the source record.
+
+After updating this repository, restart the REST server and re-import the spec
+to refresh an existing connection's saved columns. The server and its
+`tcinvest.response-schemas.json` catalog must stay in the same directory.
+
+### Optional: install the curated SQL manifest
+
+The TOML manifest provides a curated projection with stable SQL column names.
+Use this alternative when you want its explicit projections instead of columns
+discovered from OpenAPI.
 
 Copy the included manifest to SpurLab's per-user manifest directory **before
 starting a new notebook kernel**:
@@ -150,8 +166,18 @@ curl --fail http://127.0.0.1:8788/tools/tcinvest-getTickerOverview \
 
 [`tcinvest.openapi.yaml`](tcinvest.openapi.yaml) is a checked-in OpenAPI snapshot
 (JSON syntax, valid YAML). Its operation names and arguments match the manifest.
-The live document exposes a generic `payload` row schema; the manifest supplies
-the richer SQL columns. Use the manifest installation above for those columns.
+The live document and checked-in snapshot use the same per-tool definitions in
+[`tcinvest.response-schemas.json`](tcinvest.response-schemas.json). Both GET and
+POST document the same responses, including `result`, normalized `rows`, and
+the compatibility `payload` string. The schemas describe the HTTP JSON types;
+an object or array stored as text by the SQL manifest remains an object or
+array in OpenAPI.
+
+Fields can be absent or null for different companies or periods. Fields whose
+non-null type is not established are explicitly documented as accepting any
+JSON value; the catalog does not guess a type from null. Examples are
+illustrative shapes, not market quotes. Newly introduced upstream tools use a
+generic `payload` schema until their detailed definition is added to the catalog.
 The OpenAPI bearer scheme describes the optional upstream-token forwarding path;
 the normal localhost workflow uses the cached session without a bearer header.
 
@@ -192,26 +218,40 @@ Do not publish token files or expose the service through a public proxy.
 ## Development and verification
 
 ```sh
-uv run --no-project --with certifi --with pytest python -m pytest -q
+uv run --no-project --with certifi --with pytest --with openapi-schema-validator \
+  python -m pytest -q
 ```
 
-The default suite uses local HTTP/TLS fixtures and validates every manifest
-operation. It needs no TCBS account; TLS tests need the `openssl` executable.
+The default suite uses local HTTP/TLS fixtures, validates every manifest
+operation and response schema, and checks exact snapshot/runtime agreement.
+Response fixtures retain observed JSON shapes with all values replaced by
+synthetic data. It needs no TCBS account; TLS tests need the `openssl` executable.
 CI runs on Linux and macOS. Native Windows is not currently covered by CI.
+
+To update response descriptions, edit `tcinvest.response-schemas.json`, add a
+regression fixture, restart the server, and export its generated document:
+
+```sh
+curl --fail http://127.0.0.1:8788/openapi.json > tcinvest.openapi.yaml
+```
+
+Run the tests after export. Schemas are reviewed definitions; responses are not
+used to infer or change them automatically at runtime.
 
 To also check real DuckDB function registration and an end-to-end SQL → REST call,
 use the extension installed by SpurLab and its **matching** DuckDB version:
 
 ```sh
 TCINVEST_TEST_EXTENSION="$HOME/.spur/extensions/duckdb-v1.5.5/spur_rest.duckdb_extension" \
-  uv run --no-project --with certifi --with pytest --with duckdb==1.5.5 \
+  uv run --no-project --with certifi --with pytest --with openapi-schema-validator --with duckdb==1.5.5 \
   python -m pytest -q
 ```
 
 This optional test uses a temporary manifest directory and mock TCInvest results.
-It does not change your saved connections. The release check also exercised a
-live catalog request and a ticker-overview request using a local OAuth session;
-it did not exercise every upstream operation or a fresh browser login on every OS.
+It does not change your saved connections. The response-schema update also
+validated live normalized rows across all 54 upstream tools, including bank and
+non-bank samples. That is snapshot validation, not a guarantee about every
+future response; the reproducible CI checks use the synthetic fixtures above.
 
 ## License
 

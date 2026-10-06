@@ -42,6 +42,7 @@ Use this explicit compatibility option until TCBS's metadata is corrected.
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import os
@@ -54,6 +55,7 @@ import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
+from functools import cache
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, Protocol
@@ -224,6 +226,13 @@ def arguments_from_query(query: str, tool: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
+@cache
+def _response_schemas() -> dict[str, Any]:
+    """Reviewed JSON row contracts shipped alongside this standalone server."""
+    path = Path(__file__).resolve().with_name("tcinvest.response-schemas.json")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def build_openapi(tools: list[dict[str, Any]]) -> dict[str, Any]:
     paths: dict[str, Any] = {
         "/health": {
@@ -252,6 +261,7 @@ def build_openapi(tools: list[dict[str, Any]]) -> dict[str, Any]:
                                                     "name": {"type": "string"},
                                                     "path": {"type": "string"},
                                                     "description": {"type": "string"},
+                                                    "inputSchema": {"type": "object", "additionalProperties": True},
                                                 },
                                             },
                                         }
@@ -268,15 +278,26 @@ def build_openapi(tools: list[dict[str, Any]]) -> dict[str, Any]:
         name = tool["name"]
         schema = tool.get("inputSchema") or {"type": "object"}
         path = f"/tools/{name}"
-        row_schema = {
-            "type": "object",
-            "properties": {"payload": {"type": "string", "description": "JSON object for one result row"}},
-        }
+        row_schema = copy.deepcopy(_response_schemas().get(name))
+        if row_schema is None:
+            # A newly added upstream tool remains callable before its detailed
+            # row contract has been reviewed and added to the catalog.
+            row_schema = {
+                "type": "object",
+                "description": "Normalized row; a detailed schema is not yet available for this tool.",
+                "required": ["payload"],
+                "additionalProperties": True,
+                "properties": {
+                    "payload": {"type": "string", "description": "JSON-encoded source record."},
+                },
+            }
         response_schema = {
             "type": "object",
+            "required": ["ok", "tool", "result", "rows"],
             "properties": {
                 "ok": {"type": "boolean"},
                 "tool": {"type": "string"},
+                "result": {"description": "Tool result before row normalization; its shape varies by operation."},
                 "rows": {"type": "array", "items": row_schema},
             },
         }
