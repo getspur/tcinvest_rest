@@ -1,0 +1,1486 @@
+# tcinvest REST → DuckDB table functions (notebook gateway).
+# Columns are projected from live REST rows (not the payload blob).
+# Nested leftover objects/arrays stay Utf8 JSON text; payload is an escape hatch.
+# TCBS OAuth is applied by the localhost facade. Do not put secrets in this file.
+
+[source]
+name = "tcinvest"
+base_url = "http://127.0.0.1:8788"
+auth = { scheme = "none" }
+
+[[table]]
+name = "list_tools"
+path = "/tools"
+response_path = "$.tools"
+
+[table.columns]
+name = { json = "$.name", type = "Utf8" }
+path = { json = "$.path", type = "Utf8" }
+description = { json = "$.description", type = "Utf8" }
+[[table]]
+name = "get_stock_ratio"
+path = "/tools/tcinvest-getStockRatio"
+response_path = "$.rows"
+
+[table.columns]
+capitalize = { json = "$.capitalize", type = "Int64" }
+trade_volume = { json = "$.tradeVolume", type = "Int64" }
+price_to_earning = { json = "$.priceToEarning", type = "Float64" }
+price_to_book = { json = "$.priceToBook", type = "Float64" }
+value_before_ebitda = { json = "$.valueBeforeEbitda", type = "Utf8" }
+dividend = { json = "$.dividend", type = "Float64" }
+roe = { json = "$.roe", type = "Float64" }
+profit_growth_avarage = { json = "$.profitGrowthAvarage", type = "Float64" }
+age_of_receivable = { json = "$.ageOfReceivable", type = "Utf8" }
+age_of_inventory = { json = "$.ageOfInventory", type = "Utf8" }
+payable_on_equity = { json = "$.payableOnEquity", type = "Utf8" }
+payable_on_ebitda = { json = "$.payableOnEbitda", type = "Utf8" }
+ebit_on_interest = { json = "$.ebitOnInterest", type = "Utf8" }
+short_on_long_term_payable = { json = "$.shortOnLongTermPayable", type = "Utf8" }
+revenue = { json = "$.revenue", type = "Int64" }
+operation_profit = { json = "$.operationProfit", type = "Int64" }
+net_profit = { json = "$.netProfit", type = "Int64" }
+earning_per_share = { json = "$.earningPerShare", type = "Int64" }
+asset = { json = "$.asset", type = "Int64" }
+liability = { json = "$.liability", type = "Int64" }
+equity = { json = "$.equity", type = "Int64" }
+book_value_per_share = { json = "$.bookValuePerShare", type = "Int64" }
+profit_margin = { json = "$.profitMargin", type = "Float64" }
+non_interest_on_toi = { json = "$.nonInterestOnToi", type = "Float64" }
+loan_on_deposit = { json = "$.loanOnDeposit", type = "Float64" }
+credit_growth = { json = "$.creditGrowth", type = "Float64" }
+bad_debt_percentage = { json = "$.badDebtPercentage", type = "Float64" }
+provision_on_bad_debt = { json = "$.provisionOnBadDebt", type = "Float64" }
+customer_credit = { json = "$.customerCredit", type = "Int64" }
+beta_index = { json = "$.betaIndex", type = "Utf8" }
+ticker = { json = "$.ticker", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+
+[[table]]
+name = "get_stock_same_industry"
+path = "/tools/tcinvest-getStockSameIndustry"
+response_path = "$.rows"
+
+[table.columns]
+correlation = { json = "$.correlation", type = "Float64" }
+beta = { json = "$.beta", type = "Float64" }
+pe = { json = "$.pe", type = "Float64" }
+vni1m = { json = "$.vni1m", type = "Float64" }
+vni3m = { json = "$.vni3m", type = "Float64" }
+vni6m = { json = "$.vni6m", type = "Float64" }
+count_holding = { json = "$.countHolding", type = "Int64" }
+percent_holing = { json = "$.percentHoling", type = "Float64" }
+company_name = { json = "$.companyName", type = "Utf8" }
+industry_name = { json = "$.industryName", type = "Utf8" }
+exchange_name = { json = "$.exchangeName", type = "Utf8" }
+stock_rating = { json = "$.stockRating", type = "Float64" }
+market_cap = { json = "$.marketCap", type = "Int64" }
+pb = { json = "$.pb", type = "Float64" }
+roe = { json = "$.roe", type = "Float64" }
+ticker = { json = "$.ticker", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+
+[[table]]
+name = "get_stock_recommend"
+path = "/tools/tcinvest-getStockRecommend"
+response_path = "$.rows"
+
+[table.columns]
+correlation = { json = "$.correlation", type = "Float64" }
+beta = { json = "$.beta", type = "Float64" }
+pe = { json = "$.pe", type = "Float64" }
+vni1m = { json = "$.vni1m", type = "Float64" }
+vni3m = { json = "$.vni3m", type = "Float64" }
+vni6m = { json = "$.vni6m", type = "Float64" }
+count_holding = { json = "$.countHolding", type = "Int64" }
+percent_holing = { json = "$.percentHoling", type = "Float64" }
+company_name = { json = "$.companyName", type = "Utf8" }
+industry_name = { json = "$.industryName", type = "Utf8" }
+exchange_name = { json = "$.exchangeName", type = "Utf8" }
+stock_rating = { json = "$.stockRating", type = "Float64" }
+market_cap = { json = "$.marketCap", type = "Int64" }
+pb = { json = "$.pb", type = "Float64" }
+roe = { json = "$.roe", type = "Float64" }
+ticker = { json = "$.ticker", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+
+[[table]]
+name = "get_price_volatility"
+path = "/tools/tcinvest-getPriceVolatility"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+highest_price = { json = "$.highestPrice", type = "Float64" }
+lowest_price = { json = "$.lowestPrice", type = "Float64" }
+highest_price_percent = { json = "$.highestPricePercent", type = "Float64" }
+lowest_price_percent = { json = "$.lowestPricePercent", type = "Float64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+
+[[table]]
+name = "get_ticker_overview"
+path = "/tools/tcinvest-getTickerOverview"
+response_path = "$.rows"
+
+[table.columns]
+exchange = { json = "$.exchange", type = "Utf8" }
+short_name = { json = "$.shortName", type = "Utf8" }
+industry_id = { json = "$.industryID", type = "Int64" }
+industry_i_dv2 = { json = "$.industryIDv2", type = "Utf8" }
+industry_id_level2 = { json = "$.industryIdLevel2", type = "Utf8" }
+industry_id_level4 = { json = "$.industryIdLevel4", type = "Utf8" }
+industry = { json = "$.industry", type = "Utf8" }
+industry_en = { json = "$.industryEn", type = "Utf8" }
+established_year = { json = "$.establishedYear", type = "Utf8" }
+no_employees = { json = "$.noEmployees", type = "Int64" }
+no_shareholders = { json = "$.noShareholders", type = "Int64" }
+foreign_percent = { json = "$.foreignPercent", type = "Float64" }
+website = { json = "$.website", type = "Utf8" }
+stock_rating = { json = "$.stockRating", type = "Float64" }
+delta_in_week = { json = "$.deltaInWeek", type = "Float64" }
+delta_in_month = { json = "$.deltaInMonth", type = "Float64" }
+delta_in_year = { json = "$.deltaInYear", type = "Float64" }
+outstanding_share = { json = "$.outstandingShare", type = "Float64" }
+issue_share = { json = "$.issueShare", type = "Float64" }
+company_type = { json = "$.companyType", type = "Utf8" }
+ticker = { json = "$.ticker", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+
+[[table]]
+name = "get_ticker_event_news"
+path = "/tools/tcinvest-getTickerEventNews"
+response_path = "$.rows"
+
+[table.columns]
+rsi = { json = "$.rsi", type = "Float64" }
+rs = { json = "$.rs", type = "Float64" }
+id = { json = "$.id", type = "Int64" }
+ticker = { json = "$.ticker", type = "Utf8" }
+price = { json = "$.price", type = "Int64" }
+price_change = { json = "$.priceChange", type = "Int64" }
+price_change_ratio = { json = "$.priceChangeRatio", type = "Float64" }
+price_change_ratio1_m = { json = "$.priceChangeRatio1M", type = "Float64" }
+event_name = { json = "$.eventName", type = "Utf8" }
+event_code = { json = "$.eventCode", type = "Utf8" }
+notify_date = { json = "$.notifyDate", type = "Utf8" }
+exer_date = { json = "$.exerDate", type = "Utf8" }
+reg_final_date = { json = "$.regFinalDate", type = "Utf8" }
+ex_rigth_date = { json = "$.exRigthDate", type = "Utf8" }
+event_desc = { json = "$.eventDesc", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+page = { param = "page" }
+size = { param = "size" }
+
+[[table]]
+name = "get_ticker_activity_news"
+path = "/tools/tcinvest-getTickerActivityNews"
+response_path = "$.rows"
+
+[table.columns]
+rsi = { json = "$.rsi", type = "Float64" }
+rs = { json = "$.rs", type = "Float64" }
+ticker = { json = "$.ticker", type = "Utf8" }
+price = { json = "$.price", type = "Int64" }
+price_change = { json = "$.priceChange", type = "Int64" }
+price_change_ratio = { json = "$.priceChangeRatio", type = "Float64" }
+price_change_ratio1_m = { json = "$.priceChangeRatio1M", type = "Float64" }
+id = { json = "$.id", type = "Int64" }
+title = { json = "$.title", type = "Utf8" }
+source = { json = "$.source", type = "Utf8" }
+publish_date = { json = "$.publishDate", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+page = { param = "page" }
+size = { param = "size" }
+
+[[table]]
+name = "get_projection_ratio"
+path = "/tools/tcinvest-getProjectionRatio"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Utf8" }
+year = { json = "$.year", type = "Int64" }
+price_to_earning = { json = "$.priceToEarning", type = "Float64" }
+price_to_book = { json = "$.priceToBook", type = "Float64" }
+value_before_ebitda = { json = "$.valueBeforeEbitda", type = "Utf8" }
+dividend = { json = "$.dividend", type = "Float64" }
+roe = { json = "$.roe", type = "Float64" }
+roa = { json = "$.roa", type = "Float64" }
+days_receivable = { json = "$.daysReceivable", type = "Utf8" }
+days_inventory = { json = "$.daysInventory", type = "Utf8" }
+days_payable = { json = "$.daysPayable", type = "Utf8" }
+ebit_on_interest = { json = "$.ebitOnInterest", type = "Utf8" }
+earning_per_share = { json = "$.earningPerShare", type = "Int64" }
+book_value_per_share = { json = "$.bookValuePerShare", type = "Int64" }
+interest_margin = { json = "$.interestMargin", type = "Float64" }
+non_interest_on_toi = { json = "$.nonInterestOnToi", type = "Float64" }
+bad_debt_percentage = { json = "$.badDebtPercentage", type = "Float64" }
+provision_on_bad_debt = { json = "$.provisionOnBadDebt", type = "Float64" }
+cost_of_financing = { json = "$.costOfFinancing", type = "Float64" }
+equity_on_total_asset = { json = "$.equityOnTotalAsset", type = "Float64" }
+equity_on_loan = { json = "$.equityOnLoan", type = "Float64" }
+cost_to_income = { json = "$.costToIncome", type = "Float64" }
+equity_on_liability = { json = "$.equityOnLiability", type = "Utf8" }
+current_payment = { json = "$.currentPayment", type = "Utf8" }
+quick_payment = { json = "$.quickPayment", type = "Utf8" }
+eps_change = { json = "$.epsChange", type = "Float64" }
+ebitda_on_stock = { json = "$.ebitdaOnStock", type = "Utf8" }
+gross_profit_margin = { json = "$.grossProfitMargin", type = "Utf8" }
+operating_profit_margin = { json = "$.operatingProfitMargin", type = "Utf8" }
+post_tax_margin = { json = "$.postTaxMargin", type = "Utf8" }
+debt_on_equity = { json = "$.debtOnEquity", type = "Utf8" }
+debt_on_asset = { json = "$.debtOnAsset", type = "Utf8" }
+debt_on_ebitda = { json = "$.debtOnEbitda", type = "Utf8" }
+short_on_long_debt = { json = "$.shortOnLongDebt", type = "Utf8" }
+asset_on_equity = { json = "$.assetOnEquity", type = "Utf8" }
+capital_balance = { json = "$.capitalBalance", type = "Utf8" }
+cash_on_equity = { json = "$.cashOnEquity", type = "Utf8" }
+cash_on_capitalize = { json = "$.cashOnCapitalize", type = "Utf8" }
+cash_circulation = { json = "$.cashCirculation", type = "Utf8" }
+revenue_on_work_capital = { json = "$.revenueOnWorkCapital", type = "Utf8" }
+capex_on_fixed_asset = { json = "$.capexOnFixedAsset", type = "Utf8" }
+revenue_on_asset = { json = "$.revenueOnAsset", type = "Utf8" }
+post_tax_on_pre_tax = { json = "$.postTaxOnPreTax", type = "Utf8" }
+ebit_on_revenue = { json = "$.ebitOnRevenue", type = "Utf8" }
+pre_tax_on_ebit = { json = "$.preTaxOnEbit", type = "Utf8" }
+pre_provision_on_toi = { json = "$.preProvisionOnToi", type = "Float64" }
+post_tax_on_toi = { json = "$.postTaxOnToi", type = "Float64" }
+loan_on_earn_asset = { json = "$.loanOnEarnAsset", type = "Float64" }
+loan_on_asset = { json = "$.loanOnAsset", type = "Float64" }
+loan_on_deposit = { json = "$.loanOnDeposit", type = "Float64" }
+deposit_on_earn_asset = { json = "$.depositOnEarnAsset", type = "Float64" }
+bad_debt_on_asset = { json = "$.badDebtOnAsset", type = "Float64" }
+liquidity_on_liability = { json = "$.liquidityOnLiability", type = "Float64" }
+payable_on_equity = { json = "$.payableOnEquity", type = "Float64" }
+cancel_debt = { json = "$.cancelDebt", type = "Float64" }
+ebitda_on_stock_change = { json = "$.ebitdaOnStockChange", type = "Utf8" }
+book_value_per_share_change = { json = "$.bookValuePerShareChange", type = "Float64" }
+credit_growth = { json = "$.creditGrowth", type = "Float64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+
+[[table]]
+name = "get_financialdata"
+path = "/tools/tcinvest-getFinancialdata"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+year = { json = "$.year", type = "Int64" }
+revenue = { json = "$.revenue", type = "Int64" }
+year_revenue_growth = { json = "$.yearRevenueGrowth", type = "Float64" }
+quarter_revenue_growth = { json = "$.quarterRevenueGrowth", type = "Utf8" }
+cost_of_good_sold = { json = "$.costOfGoodSold", type = "Utf8" }
+gross_profit = { json = "$.grossProfit", type = "Utf8" }
+operation_expense = { json = "$.operationExpense", type = "Int64" }
+operation_profit = { json = "$.operationProfit", type = "Int64" }
+year_operation_profit_growth = { json = "$.yearOperationProfitGrowth", type = "Float64" }
+quarter_operation_profit_growth = { json = "$.quarterOperationProfitGrowth", type = "Utf8" }
+interest_expense = { json = "$.interestExpense", type = "Utf8" }
+pre_tax_profit = { json = "$.preTaxProfit", type = "Int64" }
+post_tax_profit = { json = "$.postTaxProfit", type = "Int64" }
+share_holder_income = { json = "$.shareHolderIncome", type = "Int64" }
+year_share_holder_income_growth = { json = "$.yearShareHolderIncomeGrowth", type = "Float64" }
+quarter_share_holder_income_growth = { json = "$.quarterShareHolderIncomeGrowth", type = "Utf8" }
+invest_profit = { json = "$.investProfit", type = "Int64" }
+service_profit = { json = "$.serviceProfit", type = "Int64" }
+other_profit = { json = "$.otherProfit", type = "Int64" }
+provision_expense = { json = "$.provisionExpense", type = "Int64" }
+operation_income = { json = "$.operationIncome", type = "Int64" }
+short_asset = { json = "$.shortAsset", type = "Utf8" }
+cash = { json = "$.cash", type = "Int64" }
+short_invest = { json = "$.shortInvest", type = "Utf8" }
+short_receivable = { json = "$.shortReceivable", type = "Utf8" }
+inventory = { json = "$.inventory", type = "Utf8" }
+long_asset = { json = "$.longAsset", type = "Utf8" }
+fixed_asset = { json = "$.fixedAsset", type = "Int64" }
+asset = { json = "$.asset", type = "Int64" }
+debt = { json = "$.debt", type = "Utf8" }
+short_debt = { json = "$.shortDebt", type = "Utf8" }
+long_debt = { json = "$.longDebt", type = "Utf8" }
+equity = { json = "$.equity", type = "Int64" }
+capital = { json = "$.capital", type = "Int64" }
+central_bank_deposit = { json = "$.centralBankDeposit", type = "Int64" }
+other_bank_deposit = { json = "$.otherBankDeposit", type = "Int64" }
+other_bank_loan = { json = "$.otherBankLoan", type = "Int64" }
+stock_invest = { json = "$.stockInvest", type = "Int64" }
+customer_loan = { json = "$.customerLoan", type = "Int64" }
+bad_loan = { json = "$.badLoan", type = "Int64" }
+provision = { json = "$.provision", type = "Int64" }
+net_customer_loan = { json = "$.netCustomerLoan", type = "Int64" }
+other_asset = { json = "$.otherAsset", type = "Int64" }
+other_bank_credit = { json = "$.otherBankCredit", type = "Int64" }
+owe_other_bank = { json = "$.oweOtherBank", type = "Int64" }
+owe_central_bank = { json = "$.oweCentralBank", type = "Int64" }
+valuable_paper = { json = "$.valuablePaper", type = "Int64" }
+payable_interest = { json = "$.payableInterest", type = "Int64" }
+receivable_interest = { json = "$.receivableInterest", type = "Int64" }
+deposit = { json = "$.deposit", type = "Int64" }
+other_debt = { json = "$.otherDebt", type = "Int64" }
+fund = { json = "$.fund", type = "Int64" }
+un_distributed_income = { json = "$.unDistributedIncome", type = "Int64" }
+minor_share_holder_profit = { json = "$.minorShareHolderProfit", type = "Utf8" }
+invest_cost = { json = "$.investCost", type = "Utf8" }
+from_invest = { json = "$.fromInvest", type = "Utf8" }
+from_financial = { json = "$.fromFinancial", type = "Utf8" }
+from_sale = { json = "$.fromSale", type = "Utf8" }
+net_interest_income = { json = "$.netInterestIncome", type = "Utf8" }
+ebitda = { json = "$.ebitda", type = "Utf8" }
+free_cash_flow = { json = "$.freeCashFlow", type = "Utf8" }
+payable = { json = "$.payable", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+
+[[table]]
+name = "get_event_news_detail"
+path = "/tools/tcinvest-getEventNewsDetail"
+response_path = "$.rows"
+
+[table.columns]
+rsi = { json = "$.rsi", type = "Utf8" }
+rs = { json = "$.rs", type = "Utf8" }
+id = { json = "$.id", type = "Utf8" }
+ticker = { json = "$.ticker", type = "Utf8" }
+price = { json = "$.price", type = "Utf8" }
+price_change = { json = "$.priceChange", type = "Utf8" }
+price_change_ratio = { json = "$.priceChangeRatio", type = "Utf8" }
+price_change_ratio1_m = { json = "$.priceChangeRatio1M", type = "Utf8" }
+event_name = { json = "$.eventName", type = "Utf8" }
+event_code = { json = "$.eventCode", type = "Utf8" }
+notify_date = { json = "$.notifyDate", type = "Utf8" }
+exer_date = { json = "$.exerDate", type = "Utf8" }
+reg_final_date = { json = "$.regFinalDate", type = "Utf8" }
+ex_rigth_date = { json = "$.exRigthDate", type = "Utf8" }
+event_desc = { json = "$.eventDesc", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+id = { param = "id", required = true }
+
+[[table]]
+name = "get_activity_news_detail"
+path = "/tools/tcinvest-getActivityNewsDetail"
+response_path = "$.rows"
+
+[table.columns]
+url = { json = "$.url", type = "Utf8" }
+rsi = { json = "$.rsi", type = "Float64" }
+rs = { json = "$.rs", type = "Float64" }
+ticker = { json = "$.ticker", type = "Utf8" }
+price = { json = "$.price", type = "Int64" }
+price_change = { json = "$.priceChange", type = "Int64" }
+price_change_ratio = { json = "$.priceChangeRatio", type = "Float64" }
+price_change_ratio1_m = { json = "$.priceChangeRatio1M", type = "Float64" }
+id = { json = "$.id", type = "Int64" }
+title = { json = "$.title", type = "Utf8" }
+source = { json = "$.source", type = "Utf8" }
+image = { json = "$.image", type = "Utf8" }
+short_desc = { json = "$.shortDesc", type = "Utf8" }
+content = { json = "$.content", type = "Utf8" }
+publish_date = { json = "$.publishDate", type = "Utf8" }
+author_full = { json = "$.authorFull", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+id = { param = "id", required = true }
+
+[[table]]
+name = "get_tooltip"
+path = "/tools/tcinvest-getTooltip"
+response_path = "$.rows"
+
+[table.columns]
+cost_of_financing = { json = "$.costOfFinancing", type = "Utf8" }
+interest_margin = { json = "$.interestMargin", type = "Utf8" }
+non_interest_on_toi = { json = "$.nonInterestOnToi", type = "Utf8" }
+cost_to_income = { json = "$.costToIncome", type = "Utf8" }
+pre_provision_on_toi = { json = "$.preProvisionOnToi", type = "Utf8" }
+post_tax_on_toi = { json = "$.postTaxOnToi", type = "Utf8" }
+deposit_on_earn_asset = { json = "$.depositOnEarnAsset", type = "Utf8" }
+cancel_debt = { json = "$.cancelDebt", type = "Utf8" }
+bad_debt_percentage = { json = "$.badDebtPercentage", type = "Utf8" }
+provision_on_bad_debt = { json = "$.provisionOnBadDebt", type = "Utf8" }
+loan_on_deposit = { json = "$.loanOnDeposit", type = "Utf8" }
+equity_on_total_asset = { json = "$.equityOnTotalAsset", type = "Utf8" }
+bad_debt_on_asset = { json = "$.badDebtOnAsset", type = "Utf8" }
+price_to_sales = { json = "$.priceToSales", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+
+[[table]]
+name = "get_income_statement_for_bank"
+path = "/tools/tcinvest-getIncomeStatementForBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+operation_expense = { json = "$.operationExpense", type = "Int64" }
+pre_tax_profit = { json = "$.preTaxProfit", type = "Int64" }
+post_tax_profit = { json = "$.postTaxProfit", type = "Int64" }
+share_holder_income = { json = "$.shareHolderIncome", type = "Int64" }
+year_share_holder_income_growth = { json = "$.yearShareHolderIncomeGrowth", type = "Float64" }
+quarter_share_holder_income_growth = { json = "$.quarterShareHolderIncomeGrowth", type = "Utf8" }
+invest_profit = { json = "$.investProfit", type = "Int64" }
+service_profit = { json = "$.serviceProfit", type = "Int64" }
+other_profit = { json = "$.otherProfit", type = "Int64" }
+provision_expense = { json = "$.provisionExpense", type = "Int64" }
+net_interest_income = { json = "$.netInterestIncome", type = "Int64" }
+year_net_interest_income_growth = { json = "$.yearNetInterestIncomeGrowth", type = "Float64" }
+quarter_net_interest_income_growth = { json = "$.quarterNetInterestIncomeGrowth", type = "Utf8" }
+total_operation_income = { json = "$.totalOperationIncome", type = "Int64" }
+year_total_operation_income_growth = { json = "$.yearTotalOperationIncomeGrowth", type = "Float64" }
+quarter_total_operation_income_growth = { json = "$.quarterTotalOperationIncomeGrowth", type = "Utf8" }
+pre_provision_operating_profit = { json = "$.preProvisionOperatingProfit", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_income_statement_for_non_bank"
+path = "/tools/tcinvest-getIncomeStatementForNonBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+revenue = { json = "$.revenue", type = "Int64" }
+year_revenue_growth = { json = "$.yearRevenueGrowth", type = "Float64" }
+quarter_revenue_growth = { json = "$.quarterRevenueGrowth", type = "Utf8" }
+cost_of_good_sold = { json = "$.costOfGoodSold", type = "Utf8" }
+gross_profit = { json = "$.grossProfit", type = "Utf8" }
+operation_expense = { json = "$.operationExpense", type = "Int64" }
+operation_profit = { json = "$.operationProfit", type = "Int64" }
+year_operation_profit_growth = { json = "$.yearOperationProfitGrowth", type = "Float64" }
+quarter_operation_profit_growth = { json = "$.quarterOperationProfitGrowth", type = "Utf8" }
+interest_expense = { json = "$.interestExpense", type = "Utf8" }
+pre_tax_profit = { json = "$.preTaxProfit", type = "Int64" }
+post_tax_profit = { json = "$.postTaxProfit", type = "Int64" }
+share_holder_income = { json = "$.shareHolderIncome", type = "Int64" }
+year_share_holder_income_growth = { json = "$.yearShareHolderIncomeGrowth", type = "Float64" }
+quarter_share_holder_income_growth = { json = "$.quarterShareHolderIncomeGrowth", type = "Utf8" }
+ebitda = { json = "$.ebitda", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_financial_ratio_for_bank"
+path = "/tools/tcinvest-getFinancialRatioForBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+price_to_earning = { json = "$.priceToEarning", type = "Float64" }
+price_to_book = { json = "$.priceToBook", type = "Float64" }
+dividend = { json = "$.dividend", type = "Float64" }
+roe = { json = "$.roe", type = "Float64" }
+roa = { json = "$.roa", type = "Float64" }
+earning_per_share = { json = "$.earningPerShare", type = "Int64" }
+book_value_per_share = { json = "$.bookValuePerShare", type = "Int64" }
+non_interest_on_toi = { json = "$.nonInterestOnToi", type = "Float64" }
+cost_to_income = { json = "$.costToIncome", type = "Float64" }
+eps_change = { json = "$.epsChange", type = "Float64" }
+pre_provision_on_toi = { json = "$.preProvisionOnToi", type = "Float64" }
+post_tax_on_toi = { json = "$.postTaxOnToi", type = "Float64" }
+loan_on_earn_asset = { json = "$.loanOnEarnAsset", type = "Float64" }
+loan_on_asset = { json = "$.loanOnAsset", type = "Float64" }
+loan_on_deposit = { json = "$.loanOnDeposit", type = "Float64" }
+deposit_on_earn_asset = { json = "$.depositOnEarnAsset", type = "Float64" }
+bad_debt_on_asset = { json = "$.badDebtOnAsset", type = "Float64" }
+liquidity_on_liability = { json = "$.liquidityOnLiability", type = "Float64" }
+book_value_per_share_change = { json = "$.bookValuePerShareChange", type = "Float64" }
+net_interest_margin = { json = "$.netInterestMargin", type = "Float64" }
+non_performing_loans = { json = "$.nonPerformingLoans", type = "Float64" }
+provision_on_non_performing_loans = { json = "$.provisionOnNonPerformingLoans", type = "Float64" }
+writeoff_debt = { json = "$.writeoffDebt", type = "Float64" }
+loan_growth = { json = "$.loanGrowth", type = "Float64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_financial_ratio_for_non_bank"
+path = "/tools/tcinvest-getFinancialRatioForNonBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+price_to_earning = { json = "$.priceToEarning", type = "Float64" }
+price_to_book = { json = "$.priceToBook", type = "Float64" }
+value_before_ebitda = { json = "$.valueBeforeEbitda", type = "Utf8" }
+dividend = { json = "$.dividend", type = "Float64" }
+roe = { json = "$.roe", type = "Float64" }
+roa = { json = "$.roa", type = "Float64" }
+days_receivable = { json = "$.daysReceivable", type = "Utf8" }
+days_inventory = { json = "$.daysInventory", type = "Utf8" }
+days_payable = { json = "$.daysPayable", type = "Utf8" }
+ebit_on_interest = { json = "$.ebitOnInterest", type = "Utf8" }
+earning_per_share = { json = "$.earningPerShare", type = "Int64" }
+book_value_per_share = { json = "$.bookValuePerShare", type = "Int64" }
+equity_on_total_asset = { json = "$.equityOnTotalAsset", type = "Float64" }
+equity_on_liability = { json = "$.equityOnLiability", type = "Float64" }
+current_payment = { json = "$.currentPayment", type = "Utf8" }
+quick_payment = { json = "$.quickPayment", type = "Utf8" }
+eps_change = { json = "$.epsChange", type = "Float64" }
+ebitda_on_stock = { json = "$.ebitdaOnStock", type = "Utf8" }
+gross_profit_margin = { json = "$.grossProfitMargin", type = "Utf8" }
+operating_profit_margin = { json = "$.operatingProfitMargin", type = "Utf8" }
+post_tax_margin = { json = "$.postTaxMargin", type = "Utf8" }
+debt_on_equity = { json = "$.debtOnEquity", type = "Utf8" }
+debt_on_asset = { json = "$.debtOnAsset", type = "Utf8" }
+debt_on_ebitda = { json = "$.debtOnEbitda", type = "Utf8" }
+short_on_long_debt = { json = "$.shortOnLongDebt", type = "Utf8" }
+asset_on_equity = { json = "$.assetOnEquity", type = "Float64" }
+capital_balance = { json = "$.capitalBalance", type = "Utf8" }
+cash_on_equity = { json = "$.cashOnEquity", type = "Utf8" }
+cash_on_capitalize = { json = "$.cashOnCapitalize", type = "Utf8" }
+cash_circulation = { json = "$.cashCirculation", type = "Utf8" }
+revenue_on_work_capital = { json = "$.revenueOnWorkCapital", type = "Utf8" }
+capex_on_fixed_asset = { json = "$.capexOnFixedAsset", type = "Utf8" }
+revenue_on_asset = { json = "$.revenueOnAsset", type = "Utf8" }
+post_tax_on_pre_tax = { json = "$.postTaxOnPreTax", type = "Utf8" }
+ebit_on_revenue = { json = "$.ebitOnRevenue", type = "Utf8" }
+pre_tax_on_ebit = { json = "$.preTaxOnEbit", type = "Utf8" }
+payable_on_equity = { json = "$.payableOnEquity", type = "Float64" }
+ebitda_on_stock_change = { json = "$.ebitdaOnStockChange", type = "Utf8" }
+book_value_per_share_change = { json = "$.bookValuePerShareChange", type = "Float64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_cash_flow_analyze"
+path = "/tools/tcinvest-getCashFlowAnalyze"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+init_liquid = { json = "$.initLiquid", type = "Int64" }
+delta_liquid = { json = "$.deltaLiquid", type = "Int64" }
+delta_other_liquid = { json = "$.deltaOtherLiquid", type = "Int64" }
+delta_receivable = { json = "$.deltaReceivable", type = "Int64" }
+delta_inventory = { json = "$.deltaInventory", type = "Int64" }
+delta_payble = { json = "$.deltaPayble", type = "Int64" }
+init_debt = { json = "$.initDebt", type = "Int64" }
+capex = { json = "$.capex", type = "Int64" }
+dividend = { json = "$.dividend", type = "Int64" }
+ebitda = { json = "$.ebitda", type = "Int64" }
+tax = { json = "$.tax", type = "Int64" }
+delta_debt = { json = "$.deltaDebt", type = "Int64" }
+pre_tax = { json = "$.preTax", type = "Int64" }
+depreciation = { json = "$.depreciation", type = "Int64" }
+interest_expense = { json = "$.interestExpense", type = "Int64" }
+financial_invest = { json = "$.financialInvest", type = "Int64" }
+raise_capital = { json = "$.raiseCapital", type = "Int64" }
+dividend_payment = { json = "$.dividendPayment", type = "Int64" }
+long_and_short_debt = { json = "$.longAndShortDebt", type = "Int64" }
+init_cash = { json = "$.initCash", type = "Int64" }
+end_cash = { json = "$.endCash", type = "Int64" }
+capex_debt = { json = "$.capexDebt", type = "Int64" }
+delta_liquid_debt = { json = "$.deltaLiquidDebt", type = "Int64" }
+end_liquid = { json = "$.endLiquid", type = "Int64" }
+end_debt = { json = "$.endDebt", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+yearly = { param = "yearly", required = true }
+
+[[table]]
+name = "get_cash_flow_for_bank"
+path = "/tools/tcinvest-getCashFlowForBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+invest_cost = { json = "$.investCost", type = "Int64" }
+from_invest = { json = "$.fromInvest", type = "Int64" }
+from_financial = { json = "$.fromFinancial", type = "Int64" }
+from_sale = { json = "$.fromSale", type = "Int64" }
+free_cash_flow = { json = "$.freeCashFlow", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_cash_flow_for_non_bank"
+path = "/tools/tcinvest-getCashFlowForNonBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+invest_cost = { json = "$.investCost", type = "Int64" }
+from_invest = { json = "$.fromInvest", type = "Int64" }
+from_financial = { json = "$.fromFinancial", type = "Int64" }
+from_sale = { json = "$.fromSale", type = "Int64" }
+free_cash_flow = { json = "$.freeCashFlow", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_balance_sheet_for_bank"
+path = "/tools/tcinvest-getBalanceSheetForBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+cash = { json = "$.cash", type = "Int64" }
+fixed_asset = { json = "$.fixedAsset", type = "Int64" }
+central_bank_deposit = { json = "$.centralBankDeposit", type = "Int64" }
+other_bank_deposit = { json = "$.otherBankDeposit", type = "Int64" }
+other_bank_loan = { json = "$.otherBankLoan", type = "Int64" }
+customer_loan = { json = "$.customerLoan", type = "Int64" }
+provision = { json = "$.provision", type = "Int64" }
+net_customer_loan = { json = "$.netCustomerLoan", type = "Int64" }
+other_asset = { json = "$.otherAsset", type = "Int64" }
+other_bank_credit = { json = "$.otherBankCredit", type = "Int64" }
+owe_other_bank = { json = "$.oweOtherBank", type = "Int64" }
+owe_central_bank = { json = "$.oweCentralBank", type = "Int64" }
+valuable_paper = { json = "$.valuablePaper", type = "Int64" }
+payable_interest = { json = "$.payableInterest", type = "Int64" }
+receivable_interest = { json = "$.receivableInterest", type = "Int64" }
+deposit = { json = "$.deposit", type = "Int64" }
+other_debt = { json = "$.otherDebt", type = "Int64" }
+fund = { json = "$.fund", type = "Int64" }
+un_distributed_income = { json = "$.unDistributedIncome", type = "Int64" }
+minor_share_holder_profit = { json = "$.minorShareHolderProfit", type = "Int64" }
+payable = { json = "$.payable", type = "Int64" }
+total_asset = { json = "$.totalAsset", type = "Int64" }
+total_debt = { json = "$.totalDebt", type = "Int64" }
+total_equity = { json = "$.totalEquity", type = "Int64" }
+charter_capital = { json = "$.charterCapital", type = "Int64" }
+investment_securities = { json = "$.investmentSecurities", type = "Int64" }
+non_performing_loan = { json = "$.nonPerformingLoan", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_balance_sheet_for_non_bank"
+path = "/tools/tcinvest-getBalanceSheetForNonBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+short_asset = { json = "$.shortAsset", type = "Utf8" }
+cash = { json = "$.cash", type = "Int64" }
+short_invest = { json = "$.shortInvest", type = "Utf8" }
+short_receivable = { json = "$.shortReceivable", type = "Utf8" }
+inventory = { json = "$.inventory", type = "Utf8" }
+long_asset = { json = "$.longAsset", type = "Utf8" }
+fixed_asset = { json = "$.fixedAsset", type = "Int64" }
+short_debt = { json = "$.shortDebt", type = "Utf8" }
+long_debt = { json = "$.longDebt", type = "Utf8" }
+other_asset = { json = "$.otherAsset", type = "Int64" }
+un_distributed_income = { json = "$.unDistributedIncome", type = "Int64" }
+minor_share_holder_profit = { json = "$.minorShareHolderProfit", type = "Int64" }
+payable = { json = "$.payable", type = "Int64" }
+total_asset = { json = "$.totalAsset", type = "Int64" }
+total_liabilities = { json = "$.totalLiabilities", type = "Int64" }
+total_equity = { json = "$.totalEquity", type = "Int64" }
+total_capital = { json = "$.totalCapital", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_business_results"
+path = "/tools/tcinvest-getBusinessResults"
+response_path = "$.rows"
+
+[table.columns]
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+yearly = { param = "yearly", required = true }
+
+[[table]]
+name = "get_income_statement_industry_for_bank"
+path = "/tools/tcinvest-getIncomeStatementIndustryForBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+operation_expense = { json = "$.operationExpense", type = "Int64" }
+pre_tax_profit = { json = "$.preTaxProfit", type = "Int64" }
+post_tax_profit = { json = "$.postTaxProfit", type = "Int64" }
+share_holder_income = { json = "$.shareHolderIncome", type = "Int64" }
+year_share_holder_income_growth = { json = "$.yearShareHolderIncomeGrowth", type = "Float64" }
+quarter_share_holder_income_growth = { json = "$.quarterShareHolderIncomeGrowth", type = "Utf8" }
+invest_profit = { json = "$.investProfit", type = "Int64" }
+service_profit = { json = "$.serviceProfit", type = "Int64" }
+other_profit = { json = "$.otherProfit", type = "Int64" }
+provision_expense = { json = "$.provisionExpense", type = "Int64" }
+net_interest_income = { json = "$.netInterestIncome", type = "Int64" }
+year_net_interest_income_growth = { json = "$.yearNetInterestIncomeGrowth", type = "Float64" }
+quarter_net_interest_income_growth = { json = "$.quarterNetInterestIncomeGrowth", type = "Utf8" }
+total_operation_income = { json = "$.totalOperationIncome", type = "Int64" }
+year_total_operation_income_growth = { json = "$.yearTotalOperationIncomeGrowth", type = "Float64" }
+quarter_total_operation_income_growth = { json = "$.quarterTotalOperationIncomeGrowth", type = "Utf8" }
+pre_provision_operating_profit = { json = "$.preProvisionOperatingProfit", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+icbCodeL2 = { param = "icbCodeL2", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_income_statement_industry_for_non_bank"
+path = "/tools/tcinvest-getIncomeStatementIndustryForNonBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+revenue = { json = "$.revenue", type = "Int64" }
+year_revenue_growth = { json = "$.yearRevenueGrowth", type = "Float64" }
+quarter_revenue_growth = { json = "$.quarterRevenueGrowth", type = "Utf8" }
+cost_of_good_sold = { json = "$.costOfGoodSold", type = "Utf8" }
+gross_profit = { json = "$.grossProfit", type = "Utf8" }
+operation_expense = { json = "$.operationExpense", type = "Int64" }
+operation_profit = { json = "$.operationProfit", type = "Int64" }
+year_operation_profit_growth = { json = "$.yearOperationProfitGrowth", type = "Float64" }
+quarter_operation_profit_growth = { json = "$.quarterOperationProfitGrowth", type = "Utf8" }
+interest_expense = { json = "$.interestExpense", type = "Utf8" }
+pre_tax_profit = { json = "$.preTaxProfit", type = "Int64" }
+post_tax_profit = { json = "$.postTaxProfit", type = "Int64" }
+share_holder_income = { json = "$.shareHolderIncome", type = "Int64" }
+year_share_holder_income_growth = { json = "$.yearShareHolderIncomeGrowth", type = "Float64" }
+quarter_share_holder_income_growth = { json = "$.quarterShareHolderIncomeGrowth", type = "Utf8" }
+ebitda = { json = "$.ebitda", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+icbCodeL2 = { param = "icbCodeL2", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_financial_ratio_industry_for_bank"
+path = "/tools/tcinvest-getFinancialRatioIndustryForBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+price_to_earning = { json = "$.priceToEarning", type = "Float64" }
+price_to_book = { json = "$.priceToBook", type = "Float64" }
+dividend = { json = "$.dividend", type = "Float64" }
+roe = { json = "$.roe", type = "Float64" }
+roa = { json = "$.roa", type = "Float64" }
+earning_per_share = { json = "$.earningPerShare", type = "Int64" }
+book_value_per_share = { json = "$.bookValuePerShare", type = "Int64" }
+non_interest_on_toi = { json = "$.nonInterestOnToi", type = "Float64" }
+cost_to_income = { json = "$.costToIncome", type = "Float64" }
+eps_change = { json = "$.epsChange", type = "Float64" }
+pre_provision_on_toi = { json = "$.preProvisionOnToi", type = "Float64" }
+post_tax_on_toi = { json = "$.postTaxOnToi", type = "Float64" }
+loan_on_earn_asset = { json = "$.loanOnEarnAsset", type = "Float64" }
+loan_on_asset = { json = "$.loanOnAsset", type = "Float64" }
+loan_on_deposit = { json = "$.loanOnDeposit", type = "Float64" }
+deposit_on_earn_asset = { json = "$.depositOnEarnAsset", type = "Float64" }
+bad_debt_on_asset = { json = "$.badDebtOnAsset", type = "Float64" }
+liquidity_on_liability = { json = "$.liquidityOnLiability", type = "Float64" }
+book_value_per_share_change = { json = "$.bookValuePerShareChange", type = "Float64" }
+net_interest_margin = { json = "$.netInterestMargin", type = "Float64" }
+non_performing_loans = { json = "$.nonPerformingLoans", type = "Float64" }
+provision_on_non_performing_loans = { json = "$.provisionOnNonPerformingLoans", type = "Float64" }
+writeoff_debt = { json = "$.writeoffDebt", type = "Float64" }
+loan_growth = { json = "$.loanGrowth", type = "Float64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+icbCodeL2 = { param = "icbCodeL2", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_financial_ratio_industry_for_non_bank"
+path = "/tools/tcinvest-getFinancialRatioIndustryForNonBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+price_to_earning = { json = "$.priceToEarning", type = "Float64" }
+price_to_book = { json = "$.priceToBook", type = "Float64" }
+value_before_ebitda = { json = "$.valueBeforeEbitda", type = "Utf8" }
+dividend = { json = "$.dividend", type = "Float64" }
+roe = { json = "$.roe", type = "Float64" }
+roa = { json = "$.roa", type = "Float64" }
+days_receivable = { json = "$.daysReceivable", type = "Utf8" }
+days_inventory = { json = "$.daysInventory", type = "Utf8" }
+days_payable = { json = "$.daysPayable", type = "Utf8" }
+ebit_on_interest = { json = "$.ebitOnInterest", type = "Utf8" }
+earning_per_share = { json = "$.earningPerShare", type = "Int64" }
+book_value_per_share = { json = "$.bookValuePerShare", type = "Int64" }
+equity_on_total_asset = { json = "$.equityOnTotalAsset", type = "Float64" }
+equity_on_liability = { json = "$.equityOnLiability", type = "Utf8" }
+current_payment = { json = "$.currentPayment", type = "Utf8" }
+quick_payment = { json = "$.quickPayment", type = "Utf8" }
+eps_change = { json = "$.epsChange", type = "Float64" }
+ebitda_on_stock = { json = "$.ebitdaOnStock", type = "Utf8" }
+gross_profit_margin = { json = "$.grossProfitMargin", type = "Utf8" }
+operating_profit_margin = { json = "$.operatingProfitMargin", type = "Utf8" }
+post_tax_margin = { json = "$.postTaxMargin", type = "Utf8" }
+debt_on_equity = { json = "$.debtOnEquity", type = "Utf8" }
+debt_on_asset = { json = "$.debtOnAsset", type = "Utf8" }
+debt_on_ebitda = { json = "$.debtOnEbitda", type = "Utf8" }
+short_on_long_debt = { json = "$.shortOnLongDebt", type = "Utf8" }
+asset_on_equity = { json = "$.assetOnEquity", type = "Utf8" }
+capital_balance = { json = "$.capitalBalance", type = "Utf8" }
+cash_on_equity = { json = "$.cashOnEquity", type = "Utf8" }
+cash_on_capitalize = { json = "$.cashOnCapitalize", type = "Utf8" }
+cash_circulation = { json = "$.cashCirculation", type = "Utf8" }
+revenue_on_work_capital = { json = "$.revenueOnWorkCapital", type = "Utf8" }
+capex_on_fixed_asset = { json = "$.capexOnFixedAsset", type = "Utf8" }
+revenue_on_asset = { json = "$.revenueOnAsset", type = "Utf8" }
+post_tax_on_pre_tax = { json = "$.postTaxOnPreTax", type = "Utf8" }
+ebit_on_revenue = { json = "$.ebitOnRevenue", type = "Utf8" }
+pre_tax_on_ebit = { json = "$.preTaxOnEbit", type = "Utf8" }
+payable_on_equity = { json = "$.payableOnEquity", type = "Float64" }
+ebitda_on_stock_change = { json = "$.ebitdaOnStockChange", type = "Utf8" }
+book_value_per_share_change = { json = "$.bookValuePerShareChange", type = "Float64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+icbCodeL2 = { param = "icbCodeL2", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_cash_flow_industry_for_bank"
+path = "/tools/tcinvest-getCashFlowIndustryForBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+invest_cost = { json = "$.investCost", type = "Int64" }
+from_invest = { json = "$.fromInvest", type = "Int64" }
+from_financial = { json = "$.fromFinancial", type = "Int64" }
+from_sale = { json = "$.fromSale", type = "Int64" }
+free_cash_flow = { json = "$.freeCashFlow", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+icbCodeL2 = { param = "icbCodeL2", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_cash_flow_industry_for_non_bank"
+path = "/tools/tcinvest-getCashFlowIndustryForNonBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+invest_cost = { json = "$.investCost", type = "Int64" }
+from_invest = { json = "$.fromInvest", type = "Int64" }
+from_financial = { json = "$.fromFinancial", type = "Int64" }
+from_sale = { json = "$.fromSale", type = "Int64" }
+free_cash_flow = { json = "$.freeCashFlow", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+icbCodeL2 = { param = "icbCodeL2", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_balance_sheet_industry_for_bank"
+path = "/tools/tcinvest-getBalanceSheetIndustryForBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+cash = { json = "$.cash", type = "Int64" }
+fixed_asset = { json = "$.fixedAsset", type = "Int64" }
+central_bank_deposit = { json = "$.centralBankDeposit", type = "Int64" }
+other_bank_deposit = { json = "$.otherBankDeposit", type = "Int64" }
+other_bank_loan = { json = "$.otherBankLoan", type = "Int64" }
+customer_loan = { json = "$.customerLoan", type = "Int64" }
+bad_loan = { json = "$.badLoan", type = "Int64" }
+provision = { json = "$.provision", type = "Int64" }
+total_asset = { json = "$.totalAsset", type = "Int64" }
+total_debt = { json = "$.totalDebt", type = "Int64" }
+total_equity = { json = "$.totalEquity", type = "Int64" }
+investment_securities = { json = "$.investmentSecurities", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+icbCodeL2 = { param = "icbCodeL2", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_balance_sheet_industry_for_non_bank"
+path = "/tools/tcinvest-getBalanceSheetIndustryForNonBank"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+quarter = { json = "$.quarter", type = "Int64" }
+year = { json = "$.year", type = "Int64" }
+short_asset = { json = "$.shortAsset", type = "Utf8" }
+cash = { json = "$.cash", type = "Int64" }
+short_invest = { json = "$.shortInvest", type = "Utf8" }
+short_receivable = { json = "$.shortReceivable", type = "Utf8" }
+inventory = { json = "$.inventory", type = "Utf8" }
+long_asset = { json = "$.longAsset", type = "Utf8" }
+fixed_asset = { json = "$.fixedAsset", type = "Int64" }
+short_debt = { json = "$.shortDebt", type = "Utf8" }
+long_debt = { json = "$.longDebt", type = "Utf8" }
+total_asset = { json = "$.totalAsset", type = "Int64" }
+total_liabilities = { json = "$.totalLiabilities", type = "Int64" }
+total_equity = { json = "$.totalEquity", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+icbCodeL2 = { param = "icbCodeL2", required = true }
+yearly = { param = "yearly", required = true }
+fromYear = { param = "fromYear" }
+
+[[table]]
+name = "get_asset_pro_portion"
+path = "/tools/tcinvest-getAssetProPortion"
+response_path = "$.rows"
+
+[table.columns]
+value = { json = "$.value", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+yearly = { param = "yearly", required = true }
+
+[[table]]
+name = "get_volume_and_foreign"
+path = "/tools/tcinvest-getVolumeAndForeign"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+foreign_buy = { json = "$.foreignBuy", type = "Int64" }
+foreign_sell = { json = "$.foreignSell", type = "Int64" }
+net_foreign_vol = { json = "$.netForeignVol", type = "Int64" }
+acc_net_f_vol = { json = "$.accNetFVol", type = "Int64" }
+total_volume = { json = "$.totalVolume", type = "Int64" }
+rs_rank = { json = "$.rsRank", type = "Float64" }
+date_report = { json = "$.dateReport", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+
+[[table]]
+name = "get_technical_indicator"
+path = "/tools/tcinvest-getTechnicalIndicator"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+close_price = { json = "$.closePrice", type = "Int64" }
+sma5 = { json = "$.sma5", type = "Int64" }
+sma20 = { json = "$.sma20", type = "Int64" }
+upper = { json = "$.upper", type = "Int64" }
+lower = { json = "$.lower", type = "Int64" }
+macd = { json = "$.macd", type = "Float64" }
+macdema = { json = "$.macdema", type = "Float64" }
+macdhist = { json = "$.macdhist", type = "Float64" }
+stochk = { json = "$.stochk", type = "Float64" }
+stochd = { json = "$.stochd", type = "Float64" }
+rsi = { json = "$.rsi", type = "Float64" }
+adx = { json = "$.adx", type = "Float64" }
+date_report = { json = "$.dateReport", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+
+[[table]]
+name = "get_sub_company"
+path = "/tools/tcinvest-getSubCompany"
+response_path = "$.rows"
+
+[table.columns]
+no = { json = "$.no", type = "Int64" }
+ticker = { json = "$.ticker", type = "Utf8" }
+company_name = { json = "$.companyName", type = "Utf8" }
+own_percent = { json = "$.ownPercent", type = "Float64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+page = { param = "page" }
+size = { param = "size" }
+
+[[table]]
+name = "get_company_overview"
+path = "/tools/tcinvest-getCompanyOverview"
+response_path = "$.rows"
+
+[table.columns]
+id = { json = "$.id", type = "Utf8" }
+company_name = { json = "$.companyName", type = "Utf8" }
+ticker = { json = "$.ticker", type = "Utf8" }
+company_profile = { json = "$.companyProfile", type = "Utf8" }
+history_dev = { json = "$.historyDev", type = "Utf8" }
+company_promise = { json = "$.companyPromise", type = "Utf8" }
+business_risk = { json = "$.businessRisk", type = "Utf8" }
+key_developments = { json = "$.keyDevelopments", type = "Utf8" }
+business_strategies = { json = "$.businessStrategies", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+
+[[table]]
+name = "get_large_share_holders"
+path = "/tools/tcinvest-getLargeShareHolders"
+response_path = "$.rows"
+
+[table.columns]
+no = { json = "$.no", type = "Int64" }
+ticker = { json = "$.ticker", type = "Utf8" }
+name = { json = "$.name", type = "Utf8" }
+own_percent = { json = "$.ownPercent", type = "Float64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+size = { param = "size" }
+
+[[table]]
+name = "get_key_officers"
+path = "/tools/tcinvest-getKeyOfficers"
+response_path = "$.rows"
+
+[table.columns]
+no = { json = "$.no", type = "Int64" }
+ticker = { json = "$.ticker", type = "Utf8" }
+name = { json = "$.name", type = "Utf8" }
+position = { json = "$.position", type = "Utf8" }
+own_percent = { json = "$.ownPercent", type = "Float64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+page = { param = "page" }
+size = { param = "size" }
+
+[[table]]
+name = "get_insider_dealing"
+path = "/tools/tcinvest-getInsiderDealing"
+response_path = "$.rows"
+
+[table.columns]
+no = { json = "$.no", type = "Int64" }
+ticker = { json = "$.ticker", type = "Utf8" }
+an_date = { json = "$.anDate", type = "Utf8" }
+dealing_method = { json = "$.dealingMethod", type = "Int64" }
+dealing_action = { json = "$.dealingAction", type = "Utf8" }
+quantity = { json = "$.quantity", type = "Float64" }
+price = { json = "$.price", type = "Float64" }
+ratio = { json = "$.ratio", type = "Float64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+page = { param = "page" }
+size = { param = "size" }
+
+[[table]]
+name = "get_dividend_payment_histories"
+path = "/tools/tcinvest-getDividendPaymentHistories"
+response_path = "$.rows"
+
+[table.columns]
+exercise_date = { json = "$.exerciseDate", type = "Utf8" }
+cash_year = { json = "$.cashYear", type = "Int64" }
+cash_dividend_percentage = { json = "$.cashDividendPercentage", type = "Float64" }
+issue_method = { json = "$.issueMethod", type = "Utf8" }
+no = { json = "$.no", type = "Int64" }
+ticker = { json = "$.ticker", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+page = { param = "page" }
+size = { param = "size" }
+
+[[table]]
+name = "get_list_audit_firm"
+path = "/tools/tcinvest-getListAuditFirm"
+response_path = "$.rows"
+
+[table.columns]
+no = { json = "$.no", type = "Int64" }
+ticker = { json = "$.ticker", type = "Utf8" }
+audit_firm_name = { json = "$.auditFirmName", type = "Utf8" }
+year_report = { json = "$.yearReport", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+page = { param = "page" }
+size = { param = "size" }
+
+[[table]]
+name = "get_history_recommendation"
+path = "/tools/tcinvest-getHistoryRecommendation"
+response_path = "$.rows"
+
+[table.columns]
+d = { json = "$.d", type = "Utf8" }
+ticker = { json = "$.ticker", type = "Utf8" }
+type = { json = "$.type", type = "Int64" }
+value = { json = "$.value", type = "Float64" }
+reason = { json = "$.reason", type = "Utf8" }
+list_his_buy = { json = "$.listHisBuy", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+x-language = { param = "x-language" }
+page = { param = "page" }
+size = { param = "size" }
+fType = { param = "fType", required = true }
+fData = { param = "fData", required = true }
+fTime = { param = "fTime", required = true }
+fRecommend = { param = "fRecommend" }
+
+[[table]]
+name = "get_general_rating"
+path = "/tools/tcinvest-getGeneralRating"
+response_path = "$.rows"
+
+[table.columns]
+stock_rating = { json = "$.stockRating", type = "Float64" }
+valuation = { json = "$.valuation", type = "Float64" }
+financial_health = { json = "$.financialHealth", type = "Float64" }
+business_model = { json = "$.businessModel", type = "Float64" }
+business_operation = { json = "$.businessOperation", type = "Float64" }
+rs_rating = { json = "$.rsRating", type = "Float64" }
+ta_score = { json = "$.taScore", type = "Float64" }
+stock_recommend = { json = "$.stockRecommend", type = "Utf8" }
+ticker = { json = "$.ticker", type = "Utf8" }
+highest_price = { json = "$.highestPrice", type = "Float64" }
+lowest_price = { json = "$.lowestPrice", type = "Float64" }
+price_change3m = { json = "$.priceChange3m", type = "Float64" }
+price_change1y = { json = "$.priceChange1y", type = "Float64" }
+beta = { json = "$.beta", type = "Float64" }
+alpha = { json = "$.alpha", type = "Float64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+x-language = { param = "x-language" }
+ticker = { param = "ticker", required = true }
+fType = { param = "fType", required = true }
+
+[[table]]
+name = "get_gauge_chart"
+path = "/tools/tcinvest-getGaugeChart"
+response_path = "$.rows"
+
+[table.columns]
+indicator = { json = "$.indicator", type = "Utf8" }
+simple = { json = "$.simple", type = "Utf8" }
+exponential = { json = "$.exponential", type = "Utf8" }
+average = { json = "$.average", type = "Utf8" }
+summary = { json = "$.summary", type = "Utf8" }
+signal = { json = "$.summary.signal", type = "Utf8" }
+buy = { json = "$.summary.buy", type = "Int64" }
+sell = { json = "$.summary.sell", type = "Int64" }
+neutral = { json = "$.summary.neutral", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+period = { param = "period" }
+
+[[table]]
+name = "get_long_term_candle_chart"
+path = "/tools/tcinvest-getLongTermCandleChart"
+response_path = "$.rows"
+
+[table.columns]
+ticker = { json = "$.ticker", type = "Utf8" }
+data_t1 = { json = "$.dataT1", type = "Utf8" }
+open = { json = "$.open", type = "Float64" }
+high = { json = "$.high", type = "Float64" }
+low = { json = "$.low", type = "Float64" }
+close = { json = "$.close", type = "Float64" }
+volume = { json = "$.volume", type = "Int64" }
+trading_date = { json = "$.tradingDate", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+type = { param = "type", required = true }
+ticker = { param = "ticker", required = true }
+resolution = { param = "resolution", required = true }
+to = { param = "to", required = true }
+countBack = { param = "countBack", required = true }
+
+[[table]]
+name = "get_industries"
+path = "/tools/tcinvest-getIndustries"
+response_path = "$.rows"
+
+[table.columns]
+id = { json = "$.id", type = "Int64" }
+name = { json = "$.name", type = "Utf8" }
+code = { json = "$.code", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+x-language = { param = "x-language" }
+
+[[table]]
+name = "get_industry_index"
+path = "/tools/tcinvest-getIndustryIndex"
+response_path = "$.rows"
+
+[table.columns]
+value = { json = "$.value", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+exchange = { param = "exchange", required = true }
+industry = { param = "industry", required = true }
+
+[[table]]
+name = "get_market_breadth"
+path = "/tools/tcinvest-getMarketBreadth"
+response_path = "$.rows"
+
+[table.columns]
+ex = { json = "$.ex", type = "Utf8" }
+ind = { json = "$.ind", type = "Utf8" }
+t = { json = "$.t", type = "Utf8" }
+a = { json = "$.a", type = "Int64" }
+d = { json = "$.d", type = "Int64" }
+s = { json = "$.s", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+exchange = { param = "exchange", required = true }
+industry = { param = "industry", required = true }
+
+[[table]]
+name = "get_market_leader"
+path = "/tools/tcinvest-getMarketLeader"
+response_path = "$.rows"
+
+[table.columns]
+top_inc = { json = "$.topInc", type = "Float64" }
+top_desc = { json = "$.topDesc", type = "Float64" }
+list_inc = { json = "$.listInc", type = "Utf8" }
+list_desc = { json = "$.listDesc", type = "Utf8" }
+time = { json = "$.time", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+exchange = { param = "exchange", required = true }
+industry = { param = "industry", required = true }
+
+[[table]]
+name = "get_investor_classify"
+path = "/tools/tcinvest-getInvestorClassify"
+response_path = "$.rows"
+
+[table.columns]
+ex = { json = "$.ex", type = "Utf8" }
+ind = { json = "$.ind", type = "Utf8" }
+shb = { json = "$.shb", type = "Int64" }
+shs = { json = "$.shs", type = "Int64" }
+shbp = { json = "$.shbp", type = "Float64" }
+shsp = { json = "$.shsp", type = "Float64" }
+wob = { json = "$.wob", type = "Int64" }
+wos = { json = "$.wos", type = "Int64" }
+wobp = { json = "$.wobp", type = "Float64" }
+wosp = { json = "$.wosp", type = "Float64" }
+skb = { json = "$.skb", type = "Int64" }
+sks = { json = "$.sks", type = "Int64" }
+skbp = { json = "$.skbp", type = "Float64" }
+sksp = { json = "$.sksp", type = "Float64" }
+t = { json = "$.t", type = "Utf8" }
+nsb = { json = "$.nsb", type = "Int64" }
+nwb = { json = "$.nwb", type = "Int64" }
+nskb = { json = "$.nskb", type = "Int64" }
+nba = { json = "$.nba", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+exchange = { param = "exchange", required = true }
+industry = { param = "industry", required = true }
+
+[[table]]
+name = "get_market_foreign_val"
+path = "/tools/tcinvest-getMarketForeignVal"
+response_path = "$.rows"
+
+[table.columns]
+e = { json = "$.e", type = "Utf8" }
+i = { json = "$.i", type = "Utf8" }
+t = { json = "$.t", type = "Utf8" }
+v = { json = "$.v", type = "Int64" }
+av = { json = "$.av", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+exchange = { param = "exchange", required = true }
+industry = { param = "industry", required = true }
+
+[[table]]
+name = "get_flow_market_value_percent_trading"
+path = "/tools/tcinvest-getFlowMarketValuePercentTrading"
+response_path = "$.rows"
+
+[table.columns]
+seq_time = { json = "$.seqTime", type = "Utf8" }
+acc_value = { json = "$.accValue", type = "Int64" }
+market_cap = { json = "$.marketCap", type = "Int64" }
+market_cap_percent = { json = "$.marketCapPercent", type = "Float64" }
+acc_value_percent = { json = "$.accValuePercent", type = "Float64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+exchange = { param = "exchange", required = true }
+industry = { param = "industry", required = true }
+
+[[table]]
+name = "get_fi_time_series"
+path = "/tools/tcinvest-getFiTimeSeries"
+response_path = "$.rows"
+
+[table.columns]
+industry_code = { json = "$.industryCode", type = "Utf8" }
+series_list = { json = "$.seriesList", type = "Utf8" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+industryCodes = { param = "industryCodes", required = true }
+
+[[table]]
+name = "get_market_volatility"
+path = "/tools/tcinvest-getMarketVolatility"
+response_path = "$.rows"
+
+[table.columns]
+e = { json = "$.e", type = "Utf8" }
+i = { json = "$.i", type = "Utf8" }
+ii = { json = "$.ii", type = "Float64" }
+ic = { json = "$.ic", type = "Float64" }
+mc = { json = "$.mc", type = "Int64" }
+vol = { json = "$.vol", type = "Int64" }
+val = { json = "$.val", type = "Int64" }
+fvol = { json = "$.fvol", type = "Int64" }
+fval = { json = "$.fval", type = "Int64" }
+data = { json = "$.data", type = "Utf8" }
+s = { json = "$.s", type = "Int64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+exchange = { param = "exchange", required = true }
+industrys = { param = "industrys", required = true }
+
+[[table]]
+name = "get_rs_rating"
+path = "/tools/tcinvest-getRsRating"
+response_path = "$.rows"
+
+[table.columns]
+trading_date = { json = "$.tradingDate", type = "Utf8" }
+v3_d = { json = "$.v3D", type = "Float64" }
+v1_m = { json = "$.v1M", type = "Float64" }
+v3_m = { json = "$.v3M", type = "Float64" }
+v1_y = { json = "$.v1Y", type = "Float64" }
+v_tc = { json = "$.vTC", type = "Float64" }
+payload = { json = "$.payload", type = "Utf8" }
+
+[table.filters]
+ticker = { param = "ticker", required = true }
+countBack = { param = "countBack", required = true }
+to = { param = "to", required = true }

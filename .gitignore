@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.env
+.env.*
+.mcp-auth/
+*_tokens.json
+*_client_info.json
+*.duckdb
+*.duckdb.wal
+*.log
+.DS_Store
